@@ -1,4 +1,6 @@
 # v-mall-go
 用Go实现的微商城Demo
 
-- [ ] 技术选型:Gin,Gorm,Mysql,Redis,Mongo
+技术选型:Iris,Gorm,Mysql,Redis,Mongo
+
+- [x] 引入Iris
