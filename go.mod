@@ -23,7 +23,7 @@ require (
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/golog v0.0.15 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
-	github.com/klauspost/compress v1.10.5 // indirect
+	github.com/klauspost/compress v1.10.6 // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
