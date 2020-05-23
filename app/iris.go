@@ -3,9 +3,15 @@ package app
 import (
 	"time"
 
+	"github.com/daigd/v-mall-go/controller"
+	datasoure "github.com/daigd/v-mall-go/datasource"
+	"github.com/daigd/v-mall-go/repository"
+	"github.com/daigd/v-mall-go/service"
+	"github.com/daigd/v-mall-go/viewmodel"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
+	"github.com/kataras/iris/mvc"
 )
 
 // InitIris 初始化Iris相关配置
@@ -25,6 +31,36 @@ func InitIris() {
 	app.Any("/", func(ctx iris.Context) {
 		ctx.HTML("<h1>Welcome to v-mall-go!</h1>")
 	})
+
+	// 指定 html 目录
+	app.RegisterView(iris.HTML("./web/views", ".html"))
+
+	// 对于任意错误码返回统一的响应结构
+	app.OnAnyErrorCode(func(ctx iris.Context) {
+		vo := viewmodel.ResultVO{Code: viewmodel.Fail}
+		vo.Message = ctx.Values().GetStringDefault("message", "处理失败")
+		ctx.JSON(&vo)
+	})
+
+	// 制定业务路由请求
+	// 加载 Repository 和 Service
+	data, err := datasoure.LoadMemoryData(datasoure.Memory)
+	if err != nil {
+		// 如果数据初始化失败，程序直接退出
+		app.Logger().Fatalf("加载数据失败，原因:%v", err)
+		return
+	}
+	// 创建用户Repository
+	userRepo := repository.NewUserRepository(data)
+	// 创建用户Service
+	userService := service.NewUserService(userRepo)
+	// 创建用户路由组
+	user := mvc.New(app.Party("user"))
+	// 将用户Service注册到用户请求路由组
+	user.Register(userService)
+	// 根据 controller 的方法生成对应路由请求
+	user.Handle(new(controller.UserController))
+
 	// start record.
 	// app.Use(func(ctx iris.Context) {
 	// 	ctx.Record()
@@ -44,8 +80,6 @@ func InitIris() {
 	// app.SetExecutionRules(iris.ExecutionRules{
 	// 	Done: iris.ExecutionOptions{Force: true},
 	// })
-
-	app.RegisterView(iris.HTML("./web/views", ".html"))
 
 	// app.Get("/", func(ctx iris.Context) {
 	// 	ctx.ViewData("message", "Hello World!")

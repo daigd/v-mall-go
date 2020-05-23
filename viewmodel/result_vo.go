@@ -1,4 +1,4 @@
-package model
+package viewmodel
 
 // ResultCode 响应结果码
 type ResultCode int
