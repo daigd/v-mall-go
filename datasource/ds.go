@@ -1,11 +1,5 @@
 package datasoure
 
-import (
-	"errors"
-
-	"github.com/daigd/v-mall-go/datamodel"
-)
-
 // DataEngine 数据引擎
 type DataEngine uint8
 
@@ -16,13 +10,16 @@ const (
 	Mysql
 )
 
-// LoadMemoryData 从内存中加载数据
-func LoadMemoryData(engine DataEngine) (map[int64]datamodel.User, error) {
-	if Memory != engine {
-		return nil, errors.New("当前方式只支持从内存中加载数据")
-	}
-	ds := make(map[int64]datamodel.User, 0)
-	user := datamodel.User{UserID: 1, UserName: "dai", NickName: "努力的Coder"}
-	ds[user.UserID] = user
-	return ds, nil
+// DS 数据源
+type DS struct {
+	// db *gorm.DB
 }
+
+// LoadMemoryData 从内存中加载数据
+// func LoadMemoryData() (ds *DS, err error) {
+// 	// 这会告诉 sqlite 使用内存作为一个临时数据
+// 	db, err := gorm.Open("sqlite3", ":memory:")
+// 	fmt.Println("生成的数据库", db)
+// 	ds = &DS{db: db}
+// 	return
+// }

@@ -44,16 +44,16 @@ func InitIris() {
 
 	// 制定业务路由请求
 	// 加载 Repository 和 Service
-	data, err := datasoure.LoadMemoryData(datasoure.Memory)
-	if err != nil {
-		// 如果数据初始化失败，程序直接退出
-		app.Logger().Fatalf("加载数据失败，原因:%v", err)
-		return
-	}
+	// ds, err := datasoure.LoadMemoryData()
+	// if err != nil {
+	// 	// 如果数据初始化失败，程序直接退出
+	// 	app.Logger().Fatalf("加载数据失败，原因:%v", err)
+	// 	return
+	// }
 	// 创建用户Repository
-	userRepo := repository.NewUserRepository(data)
+	repo := repository.NewBaseRepository(datasoure.Memory)
 	// 创建用户Service
-	userService := service.NewUserService(userRepo)
+	userService := service.NewUserService(repo)
 	// 创建用户路由组
 	user := mvc.New(app.Party("user"))
 	// 将用户Service注册到用户请求路由组

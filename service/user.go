@@ -15,11 +15,11 @@ type UserService interface {
 }
 
 type userService struct {
-	repo repository.UserRepository
+	repo repository.BaseRepository
 }
 
 // NewUserService 创建用户 Service
-func NewUserService(repo repository.UserRepository) UserService {
+func NewUserService(repo repository.BaseRepository) UserService {
 	return &userService{repo: repo}
 }
 
@@ -29,9 +29,8 @@ func (u *userService) QueryByUserNameAndPwd(username string, password string) bi
 
 func (u *userService) QueryByID(id int64) (user bizmodel.User, found bool) {
 	fmt.Printf("查询用户信息，userID:%d\n", id)
-	dataUser, found := u.repo.Select(func(u datamodel.User) bool {
-		return u.UserID == id
-	})
+	dataUser := datamodel.User{UserID: id}
+	found = u.repo.First(&dataUser)
 	if !found {
 		user = bizmodel.User{}
 		return
