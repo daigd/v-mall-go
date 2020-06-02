@@ -3,6 +3,8 @@ package repository
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/daigd/v-mall-go/datamodel"
 )
 
 type baseRepositoryInMemory struct {
@@ -14,23 +16,33 @@ func (r *baseRepositoryInMemory) FindAll() (out interface{}, found bool) {
 }
 
 func (r *baseRepositoryInMemory) First(out interface{}) (found bool) {
-	t := reflect.TypeOf(out)
-	fmt.Println("接口类型", t)
-	k := t.Kind()
-	fmt.Println("接口种类", k)
 	// 获取接口指向的元素
-	v := reflect.ValueOf(out).Elem()
-	// 获取字段数量
-	for i := 0; i < v.NumField(); i++ {
-		// 取出每个值
-		f := v.Field(i)
-		switch f.Kind() {
-		case reflect.String:
-			f.SetString("dgd")
-		case reflect.Bool:
-			f.SetBool(false)
+	v := reflect.ValueOf(out)
+	vk := v.Kind()
+	fmt.Printf("接口类型:%v,Kind:%v\n", v.Type(), vk)
+	// 获取指针指向的数据
+	if reflect.Ptr == vk {
+		ve := v.Elem()
+		switch ve.Kind() {
+		case reflect.Struct:
+			du := reflect.TypeOf(datamodel.User{})
+			// 利用反射修改User的值
+			if du == ve.Type() {
+				if ve.FieldByName("UserID").Int() < 1 {
+					return
+				}
+				ve.FieldByName("UserName").SetString("test")
+				ve.FieldByName("NickName").SetString("Dandy")
+			}
 		}
 	}
 	found = true
 	return
+}
+
+func (r *baseRepositoryInMemory) FirstByConditon(out interface{}, query interface{}, values ...interface{}) {
+}
+
+func (*baseRepositoryInMemory) Create(value interface{}) (err error) {
+	return nil
 }

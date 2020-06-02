@@ -1,0 +1,7 @@
+dbconfig:
+  host: 170.1.10.86
+  port: 3306
+  username: root
+  password: root
+  database: v_mall
+

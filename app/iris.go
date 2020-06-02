@@ -38,7 +38,7 @@ func InitIris() {
 	// 对于任意错误码返回统一的响应结构
 	app.OnAnyErrorCode(func(ctx iris.Context) {
 		vo := viewmodel.ResultVO{Code: viewmodel.Fail}
-		vo.Message = ctx.Values().GetStringDefault("message", "处理失败")
+		vo.Message = ctx.Values().GetStringDefault("message", "非法请求")
 		ctx.JSON(&vo)
 	})
 
@@ -51,7 +51,7 @@ func InitIris() {
 	// 	return
 	// }
 	// 创建用户Repository
-	repo := repository.NewBaseRepository(datasoure.Memory)
+	repo := repository.NewBaseRepository(datasoure.Mysql)
 	// 创建用户Service
 	userService := service.NewUserService(repo)
 	// 创建用户路由组
@@ -123,7 +123,7 @@ func InitIris() {
 	// 	app.Logger().Info("过2分钟再执行Shutdown函数")
 	// 	app.Shutdown(ctx)
 	// })
-	app.Run(iris.Addr(":8080"), iris.WithCharset("UTF-8"), iris.WithTimeFormat("2006-01-02 13:04:05"), iris.WithoutInterruptHandler)
+	app.Run(iris.Addr(":8088"), iris.WithCharset("UTF-8"), iris.WithTimeFormat("2006-01-02 13:04:05"), iris.WithoutInterruptHandler)
 
 	// app.NewHost(&http.Server{Addr: "9090"}).ListenAndServe()
 

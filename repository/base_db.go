@@ -26,3 +26,11 @@ func (r *baseRepositoryInDB) First(out interface{}) (found bool) {
 	}
 	return
 }
+
+func (r *baseRepositoryInDB) FirstByConditon(out interface{}, query interface{}, values ...interface{}) {
+	r.db.Where(query, values).First(out)
+}
+
+func (r *baseRepositoryInDB) Create(value interface{}) (err error) {
+	return r.db.Create(value).Error
+}
