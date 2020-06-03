@@ -3,8 +3,6 @@ package service
 import (
 	"errors"
 	"fmt"
-	"time"
-
 	"github.com/daigd/v-mall-go/bizmodel"
 	"github.com/daigd/v-mall-go/datamodel"
 	"github.com/daigd/v-mall-go/repository"
@@ -14,7 +12,8 @@ import (
 // UserService 定义用户服务相关函数
 type UserService interface {
 	QueryByID(id int64) (bizmodel.User, bool)
-	QueryByUserNameAndPwd(username string, password string) bizmodel.User
+	QueryByUserName(username string) (user bizmodel.User, found bool)
+	QueryByUserNameAndPwd(username string, password string) (user bizmodel.User, found bool)
 	Create(username string, password string, nickname string, createdBy string) (id int64, err error)
 }
 
@@ -27,14 +26,40 @@ func NewUserService(repo repository.BaseRepository) UserService {
 	return &userService{repo: repo}
 }
 
-func (u *userService) QueryByUserNameAndPwd(username string, password string) bizmodel.User {
-	return bizmodel.User{}
+func (u *userService) QueryByUserName(username string) (user bizmodel.User, found bool) {
+	dataUser := datamodel.User{}
+	u.repo.FirstByCondition(&dataUser, "user_name=?", username)
+	if dataUser.UserID < 1 {
+		user = bizmodel.User{}
+		return
+	}
+	found = true
+	user = bizmodel.User{UserID: dataUser.UserID, UserName: dataUser.UserName, NickName: dataUser.NickName}
+	return
+}
+
+func (u *userService) QueryByUserNameAndPwd(username string, password string) (user bizmodel.User, found bool) {
+	dataUser := datamodel.User{}
+	u.repo.FirstByCondition(&dataUser, "user_name=?", username)
+	if dataUser.UserID < 1 {
+		user = bizmodel.User{}
+		return
+	}
+	err := compareHashedPassword(dataUser.HashedPassword, password)
+	if err != nil {
+		fmt.Println("密码不正确", err)
+		user = bizmodel.User{}
+		return
+	}
+	found = true
+	user = bizmodel.User{UserID: dataUser.UserID, UserName: dataUser.UserName, NickName: dataUser.NickName}
+	return
 }
 
 func (u *userService) QueryByID(id int64) (user bizmodel.User, found bool) {
 	fmt.Printf("查询用户信息，userID:%d\n", id)
 	dataUser := datamodel.User{}
-	u.repo.FirstByConditon(&dataUser, "user_id=?", id)
+	u.repo.FirstByCondition(&dataUser, "user_id=?", id)
 
 	if dataUser.UserID < 1 {
 		user = bizmodel.User{}
@@ -59,9 +84,7 @@ func (u *userService) Create(username string, password string, nickname string, 
 		NickName:       nickname,
 		HashedPassword: hashedPwd,
 		CreatedBy:      operatedBy,
-		CreatedAt:      time.Now(),
 		UpdatedBy:      operatedBy,
-		UpdatedAt:      time.Now(),
 	}
 	err = u.repo.Create(&du)
 	return du.UserID, err
@@ -86,4 +109,8 @@ func generateHashedPassword(password string) (hashedPwd string, err error) {
 	}
 	hashedPwd = string(pwd)
 	return
+}
+
+func compareHashedPassword(hashedPassword, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }

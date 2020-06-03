@@ -11,6 +11,7 @@ require (
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2 v0.0.0-20200529170236-5abacdfa4915 // indirect
+	github.com/garyburd/redigo v1.6.0
 	github.com/gavv/monotime v0.0.0-20190418164738-30dba4353424 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
@@ -39,5 +40,6 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
+	gopkg.in/yaml.v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.0-20200601152816-913338de1bd2
 )

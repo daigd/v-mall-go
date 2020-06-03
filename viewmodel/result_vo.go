@@ -4,10 +4,10 @@ package viewmodel
 type ResultCode int
 
 const (
-	// Success 处理成功
-	Success ResultCode = 200
-	// Fail 处理失败
-	Fail ResultCode = -1000
+	// SUCCESS 处理成功
+	SUCCESS ResultCode = 200
+	// FAIL 处理失败
+	FAIL ResultCode = -1000
 )
 
 // ResultVO 服务响应对象
@@ -20,8 +20,16 @@ type ResultVO struct {
 // ResultSuccess 处理成功，默认响应
 func ResultSuccess() *ResultVO {
 	return &ResultVO{
-		Code:    Success,
+		Code:    SUCCESS,
 		Message: "处理成功",
+	}
+}
+
+func ResultSuccessData(data interface{}) *ResultVO {
+	return &ResultVO{
+		Code:    SUCCESS,
+		Message: "处理成功",
+		Data:    data,
 	}
 }
 
@@ -29,6 +37,13 @@ func ResultSuccess() *ResultVO {
 func ResultErrorCode(code ResultCode, message string) *ResultVO {
 	return &ResultVO{
 		Code:    code,
+		Message: message,
+	}
+}
+
+func ResultErrorMsg(message string) *ResultVO {
+	return &ResultVO{
+		Code:    FAIL,
 		Message: message,
 	}
 }

@@ -40,7 +40,7 @@ func (r *baseRepositoryInMemory) First(out interface{}) (found bool) {
 	return
 }
 
-func (r *baseRepositoryInMemory) FirstByConditon(out interface{}, query interface{}, values ...interface{}) {
+func (r *baseRepositoryInMemory) FirstByCondition(out interface{}, query interface{}, values ...interface{}) {
 }
 
 func (*baseRepositoryInMemory) Create(value interface{}) (err error) {

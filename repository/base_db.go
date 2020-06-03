@@ -27,7 +27,7 @@ func (r *baseRepositoryInDB) First(out interface{}) (found bool) {
 	return
 }
 
-func (r *baseRepositoryInDB) FirstByConditon(out interface{}, query interface{}, values ...interface{}) {
+func (r *baseRepositoryInDB) FirstByCondition(out interface{}, query interface{}, values ...interface{}) {
 	r.db.Where(query, values).First(out)
 }
 

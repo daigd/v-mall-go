@@ -37,7 +37,7 @@ func InitIris() {
 
 	// 对于任意错误码返回统一的响应结构
 	app.OnAnyErrorCode(func(ctx iris.Context) {
-		vo := viewmodel.ResultVO{Code: viewmodel.Fail}
+		vo := viewmodel.ResultVO{Code: viewmodel.FAIL}
 		vo.Message = ctx.Values().GetStringDefault("message", "非法请求")
 		ctx.JSON(&vo)
 	})
@@ -58,6 +58,7 @@ func InitIris() {
 	user := mvc.New(app.Party("user"))
 	// 将用户Service注册到用户请求路由组
 	user.Register(userService)
+
 	// 根据 controller 的方法生成对应路由请求
 	user.Handle(new(controller.UserController))
 
